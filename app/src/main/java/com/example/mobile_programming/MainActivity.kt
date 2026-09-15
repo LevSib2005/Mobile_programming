@@ -123,17 +123,17 @@ class MainActivity : AppCompatActivity() {
     private fun getZodiacImage(zodiac: String): Int {
         when (zodiac) {
             "Овен" -> return R.drawable.oven
-//            "Телец" -> return R.drawable.taurus
-//            "Близнецы" -> return R.drawable.gemini
-//            "Рак" -> return R.drawable.cancer
-//            "Лев" -> return R.drawable.leo
-//            "Дева" -> return R.drawable.virgo
-//            "Весы" -> return R.drawable.libra
-//            "Скорпион" -> return R.drawable.scorpio
-//            "Стрелец" -> return R.drawable.sagittarius
-//            "Козерог" -> return R.drawable.capricorn
-//            "Водолей" -> return R.drawable.aquarius
-//            "Рыбы" -> return R.drawable.pisces
+            "Телец" -> return R.drawable.telets
+            "Близнецы" -> return R.drawable.twin
+            "Рак" -> return R.drawable.rak
+            "Лев" -> return R.drawable.lev
+            "Дева" -> return R.drawable.deva
+            "Весы" -> return R.drawable.vesi
+            "Скорпион" -> return R.drawable.skorpion
+            "Стрелец" -> return R.drawable.strelets
+            "Козерог" -> return R.drawable.kozerog
+            "Водолей" -> return R.drawable.vodolaz
+            "Рыбы" -> return R.drawable.mister_fish
             else -> return 0
         }
     }
