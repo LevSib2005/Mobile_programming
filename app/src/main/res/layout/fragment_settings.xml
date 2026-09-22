@@ -17,32 +17,56 @@
             android:textStyle="bold"
             android:layout_marginBottom="16dp"/>
 
-        <!-- Скорость игры -->
-        <TextView android:id="@+id/tvSpeedValue" android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:text="Скорость игры: 5"/>
-        <SeekBar android:id="@+id/sbSpeed" android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:max="10" android:progress="5"/>
+        <TextView
+            android:id="@+id/tvSpeedValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Скорость игры: 5"/>
+        <SeekBar
+            android:id="@+id/sbSpeed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="10"
+            android:progress="5"/>
 
-        <!-- Максимум тараканов -->
-        <TextView android:id="@+id/tvMaxBugsValue" android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:layout_marginTop="16dp"
+        <TextView
+            android:id="@+id/tvMaxBugsValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:text="Максимум тараканов на экране: 10"/>
-        <SeekBar android:id="@+id/sbMaxBugs" android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:max="20" android:progress="10"/>
+        <SeekBar
+            android:id="@+id/sbMaxBugs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="20"
+            android:progress="10"/>
 
-        <!-- Интервал бонусов -->
-        <TextView android:id="@+id/tvBonusIntervalValue" android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:layout_marginTop="16dp"
+        <TextView
+            android:id="@+id/tvBonusIntervalValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:text="Интервал появления бонусов: 5 сек"/>
-        <SeekBar android:id="@+id/sbBonusInterval" android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:max="30" android:progress="5"/>
+        <SeekBar
+            android:id="@+id/sbBonusInterval"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="30"
+            android:progress="5"/>
 
-        <!-- Длительность раунда -->
-        <TextView android:id="@+id/tvRoundTimeValue" android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:layout_marginTop="16dp"
+        <TextView
+            android:id="@+id/tvRoundTimeValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:text="Длительность раунда: 60 сек"/>
-        <SeekBar android:id="@+id/sbRoundTime" android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:min="30" android:max="180"
+        <SeekBar
+            android:id="@+id/sbRoundTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:min="30"
+            android:max="180"
             android:progress="60"/>
 
     </LinearLayout>

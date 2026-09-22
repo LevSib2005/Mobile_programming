@@ -14,7 +14,7 @@
         app:tabIndicatorColor="#2E7D32"
         app:tabSelectedTextColor="#2E7D32" />
 
-    <!-- Область вкладок (сам контент, переключается свайпом) -->
+    <!-- Область вкладок -->
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
         android:layout_width="match_parent"

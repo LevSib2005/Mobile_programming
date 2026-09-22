@@ -6,7 +6,6 @@
     android:gravity="center_vertical"
     android:padding="12dp">
 
-    <!-- Фото автора -->
     <ImageView
         android:id="@+id/ivAuthorPhoto"
         android:layout_width="64dp"
@@ -14,7 +13,6 @@
         android:scaleType="centerCrop"
         android:src="@mipmap/ic_launcher"/>
 
-    <!-- Имя автора -->
     <TextView
         android:id="@+id/tvAuthorName"
         android:layout_width="0dp"
