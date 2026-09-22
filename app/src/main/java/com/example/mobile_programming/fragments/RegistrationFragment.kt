@@ -15,6 +15,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.mobile_programming.R
+import com.example.mobile_programming.models.Player
 import java.util.Calendar
 import kotlin.math.max
 
