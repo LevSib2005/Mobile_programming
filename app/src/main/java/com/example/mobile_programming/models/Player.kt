@@ -1,4 +1,4 @@
-package com.example.mobile_programming
+package com.example.mobile_programming.models
 
 class Player {
     var fio: String? = null

@@ -14,6 +14,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.example.mobile_programming.models.Player
 import java.util.Calendar
 import kotlin.math.max
 
