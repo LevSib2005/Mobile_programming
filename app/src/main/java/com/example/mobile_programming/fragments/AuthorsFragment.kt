@@ -24,8 +24,8 @@ class AuthorsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val authors = listOf(
-            Author(R.mipmap.ic_launcher, "Голещихин Данил"),
-            Author(R.mipmap.ic_launcher, "Гунзенов Лев")
+            Author(R.drawable.oven, "Голещихин Данил"),
+            Author(R.drawable.lev, "Гунзенов Лев")
         )
 
         val listView = view.findViewById<ListView>(R.id.listAuthors)
