@@ -59,7 +59,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Бей по жукам и зарабатывай очки!"
+            android:text="Тапай по жукам и зарабатывай очки!"
             android:textColor="#DDDDDD"
             android:textSize="16sp"
             android:layout_marginBottom="32dp"/>
@@ -72,7 +72,6 @@
             android:paddingStart="48dp"
             android:paddingEnd="48dp"/>
     </LinearLayout>
-
 
     <!-- Экран результата после окончания раунда -->
     <LinearLayout
