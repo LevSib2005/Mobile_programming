@@ -1,4 +1,4 @@
-package com.example.myapplication.models
+package com.example.mobile_programming.models
 
 enum class BugType {
     NORMAL,
