@@ -79,5 +79,48 @@ class GameView @JvmOverloads constructor(
         }
     }
 
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
+        val sx = width / FIELD_W
+        val sy = height / FIELD_H
 
+        for (bug in bugs) {
+            val px = bug.x * sx
+            val py = bug.y * sy
+            val psize = bug.size * sx
+
+            val drawable = ContextCompat.getDrawable(context, bug.drawableRes) ?: continue
+            drawable.setBounds(
+                (px - psize / 2f).toInt(),
+                (py - psize / 2f).toInt(),
+                (px + psize / 2f).toInt(),
+                (py + psize / 2f).toInt()
+            )
+            drawable.draw(canvas)
+        }
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (event.action != MotionEvent.ACTION_DOWN) return super.onTouchEvent(event)
+
+        val sx = width / FIELD_W
+        val sy = height / FIELD_H
+        val lx = event.x / sx
+        val ly = event.y / sy
+
+        for (i in bugs.indices.reversed()) {
+            val bug = bugs[i]
+            val dx = lx - bug.x
+            val dy = ly - bug.y
+            val r = bug.size / 2f
+            if (dx * dx + dy * dy <= r * r) {
+                bugs.removeAt(i)
+                invalidate()
+                onBugKilled?.invoke(bug)
+                return true
+            }
+        }
+        onMiss?.invoke()
+        return true
+    }
 }
