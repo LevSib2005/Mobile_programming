@@ -40,6 +40,44 @@ class GameView @JvmOverloads constructor(
         }
     }
 
+    fun start() {
+        lastFrameTime = 0L
+        post(loop)
+    }
+
+    fun stop() {
+        removeCallbacks(loop)
+    }
+
+    fun clearBugs() {
+        bugs.clear()
+        invalidate()
+    }
+
+    fun spawnBug(): Bug? {
+        if (bugs.size >= GameSettings.maxBugs) return null
+
+        val id = System.currentTimeMillis() + Random.nextLong()
+        val x = Random.nextFloat() * (FIELD_W - 200f) + 100f
+        val y = Random.nextFloat() * (FIELD_H - 200f) + 100f
+        val bug = BugFactory.createRandom(id, x, y)
+        bugs.add(bug)
+        return bug
+    }
+
+    private fun update(dt: Float) {
+        if (dt <= 0f) return
+        for (bug in bugs) {
+            bug.x += bug.vx * dt
+            bug.y += bug.vy * dt
+
+            val half = bug.size / 2f
+            if (bug.x < half) { bug.x = half; bug.vx = -bug.vx }
+            if (bug.x > FIELD_W - half) { bug.x = FIELD_W - half; bug.vx = -bug.vx }
+            if (bug.y < half) { bug.y = half; bug.vy = -bug.vy }
+            if (bug.y > FIELD_H - half) { bug.y = FIELD_H - half; bug.vy = -bug.vy }
+        }
+    }
 
 
 }
