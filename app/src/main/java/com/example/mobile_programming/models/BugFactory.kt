@@ -1,15 +1,6 @@
 package com.example.mobile_programming.models
 
 import com.example.mobile_programming.R
-import com.example.mobile_programming.models.BugFactory.BASE_SPEED_FAST
-import com.example.mobile_programming.models.BugFactory.BASE_SPEED_NORMAL
-import com.example.mobile_programming.models.BugFactory.BASE_SPEED_RARE
-import com.example.mobile_programming.models.BugFactory.POINTS_FAST
-import com.example.mobile_programming.models.BugFactory.POINTS_NORMAL
-import com.example.mobile_programming.models.BugFactory.POINTS_RARE
-import com.example.mobile_programming.models.BugFactory.SIZE_FAST
-import com.example.mobile_programming.models.BugFactory.SIZE_NORMAL
-import com.example.mobile_programming.models.BugFactory.SIZE_RARE
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.random.Random
