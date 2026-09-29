@@ -84,7 +84,7 @@ object BugFactory {
     }
 
     private fun speedMultiplier(): Float {
-        val s = GameSettings.speed.coerceIn(1, 10)
+        val s = GameSettings.speed.coerceIn(0, 10)
         return s / 5f
     }
 }
