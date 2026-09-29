@@ -82,5 +82,10 @@ object BugFactory {
         val angle = Random.nextFloat() * 2f * Math.PI.toFloat()
         return cos(angle) to sin(angle)
     }
+
+    private fun speedMultiplier(): Float {
+        val s = GameSettings.speed.coerceIn(1, 10)
+        return s / 5f
+    }
 }
 
