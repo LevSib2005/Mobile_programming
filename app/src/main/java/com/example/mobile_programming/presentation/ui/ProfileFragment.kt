@@ -14,6 +14,7 @@ import com.example.mobile_programming.R
 import com.example.mobile_programming.data.local.SessionManager
 import com.example.mobile_programming.domain.repository.UserRepository
 import kotlinx.coroutines.launch
+import kotlin.text.clear
 
 class ProfileFragment : Fragment() {
 

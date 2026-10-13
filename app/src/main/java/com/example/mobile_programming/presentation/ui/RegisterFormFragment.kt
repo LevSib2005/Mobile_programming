@@ -66,6 +66,7 @@ class RegisterFormFragment : Fragment() {
         }
 
         btnRegister.setOnClickListener {
+            // .lowercase() надо будет добавить если нужна нормализация
             val login = etLogin.text.toString().trim()
             val password = etPassword.text.toString().trim()
             val fio = etFio.text.toString().trim()

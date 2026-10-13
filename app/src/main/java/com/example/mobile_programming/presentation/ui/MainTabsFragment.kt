@@ -16,7 +16,7 @@ class MainTabsFragment : Fragment() {
     private lateinit var viewPager: ViewPager2
     private lateinit var tabLayout: TabLayout
 
-    private val tabTitles = listOf("Профиль", "Правила", "Игра", "Авторы", "Настройки")
+    private val tabTitles = listOf("Профиль", "Правила", "Игра", "Авторы", "Настройки", "Рекорды")
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,6 +52,7 @@ class MainTabsFragment : Fragment() {
                 2 -> GameFragment()
                 3 -> AuthorsFragment()
                 4 -> SettingsFragment()
+                5 -> RecordsFragment()
                 else -> ProfileFragment()
             }
         }

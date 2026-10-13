@@ -34,6 +34,7 @@ class LoginFormFragment : Fragment() {
         val btnLogin = view.findViewById<Button>(R.id.btnLogin)
 
         btnLogin.setOnClickListener {
+            // .lowercase() надо будет добавить если нужна нормализация
             val login = etLogin.text.toString().trim()
             val password = etPassword.text.toString().trim()
 

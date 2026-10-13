@@ -11,10 +11,15 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import com.example.mobile_programming.MyApplication
 import com.example.mobile_programming.R
+import com.example.mobile_programming.data.local.SessionManager
 import com.example.mobile_programming.domain.models.Bug
 import com.example.mobile_programming.presentation.ui.views.GameView
 import com.example.mobile_programming.domain.models.GameSettings
+import com.example.mobile_programming.domain.repository.ScoreRepository
+import kotlinx.coroutines.launch
 
 class GameFragment : Fragment() {
 
@@ -28,6 +33,9 @@ class GameFragment : Fragment() {
     private lateinit var tvResultHits: TextView
     private lateinit var tvResultMisses: TextView
     private lateinit var tvResultAccuracy: TextView
+
+    private lateinit var scoreRepo: ScoreRepository
+    private lateinit var session: SessionManager
 
     private var score = 0
     private var hits = 0
@@ -71,6 +79,10 @@ class GameFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val app = requireContext().applicationContext as MyApplication
+        scoreRepo = app.scoreRepository
+        session = SessionManager(requireContext())
 
         gameView = view.findViewById(R.id.gameView)
         tvScore = view.findViewById(R.id.tvScore)
@@ -124,7 +136,7 @@ class GameFragment : Fragment() {
         resultOverlay.visibility = View.GONE
         pauseOverlay.visibility = View.GONE
 
-        (requireParentFragment() as? MainTabsFragment)?.setGameMode(true)
+        (parentFragment as? MainTabsFragment)?.setGameMode(true)
         backCallback.isEnabled = true
 
         gameView.clearBugs()
@@ -163,7 +175,7 @@ class GameFragment : Fragment() {
         resultOverlay.visibility = View.GONE
         startOverlay.visibility = View.VISIBLE
 
-        (requireParentFragment() as? MainTabsFragment)?.setGameMode(false)
+        (parentFragment as? MainTabsFragment)?.setGameMode(false)
         backCallback.isEnabled = false
     }
 
@@ -173,7 +185,7 @@ class GameFragment : Fragment() {
         stopAllTasks()
         gameView.stop()
 
-        (requireParentFragment() as? MainTabsFragment)?.setGameMode(false)
+        (parentFragment as? MainTabsFragment)?.setGameMode(false)
         backCallback.isEnabled = false
 
         val total = hits + misses
@@ -186,6 +198,13 @@ class GameFragment : Fragment() {
 
         pauseOverlay.visibility = View.GONE
         resultOverlay.visibility = View.VISIBLE
+
+        val userId = session.getUserId()
+        if (userId > 0) {
+            viewLifecycleOwner.lifecycleScope.launch {
+                scoreRepo.save(userId, score, GameSettings.speed, GameSettings.roundTime)
+            }
+        }
     }
 
     private fun stopAllTasks() {
