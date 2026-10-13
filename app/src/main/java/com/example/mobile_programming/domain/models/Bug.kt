@@ -1,4 +1,4 @@
-package com.example.mobile_programming.models
+package com.example.mobile_programming.domain.models
 data class Bug(
     val id: Long,
     var x: Float,

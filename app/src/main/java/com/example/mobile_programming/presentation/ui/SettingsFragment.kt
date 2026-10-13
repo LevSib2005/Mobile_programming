@@ -1,4 +1,4 @@
-package com.example.mobile_programming.fragments
+package com.example.mobile_programming.presentation.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,7 +8,7 @@ import android.widget.SeekBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.mobile_programming.R
-import com.example.mobile_programming.models.GameSettings
+import com.example.mobile_programming.domain.models.GameSettings
 
 class SettingsFragment : Fragment() {
 

@@ -1,4 +1,4 @@
-package com.example.mobile_programming.views
+package com.example.mobile_programming.presentation.ui.views
 
 import android.content.Context
 import android.graphics.Canvas
@@ -6,9 +6,9 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import androidx.core.content.ContextCompat
-import com.example.mobile_programming.models.Bug
-import com.example.mobile_programming.models.BugFactory
-import com.example.mobile_programming.models.GameSettings
+import com.example.mobile_programming.domain.models.Bug
+import com.example.mobile_programming.domain.models.BugFactory
+import com.example.mobile_programming.domain.models.GameSettings
 import kotlin.random.Random
 
 class GameView @JvmOverloads constructor(

@@ -1,5 +1,6 @@
-package com.example.mobile_programming.fragments
+package com.example.mobile_programming.presentation.ui
 
+import android.R
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,8 +15,7 @@ import android.widget.SeekBar
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import com.example.mobile_programming.R
-import com.example.mobile_programming.models.Player
+import com.example.mobile_programming.domain.models.Player
 import java.util.Calendar
 import kotlin.math.max
 
@@ -58,8 +58,8 @@ class RegistrationFragment : Fragment() {
         val btnShow = view.findViewById<Button>(R.id.btnShow)
 
         val courses = arrayOf("1 курс", "2 курс", "3 курс", "4 курс", "5 курс")
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, courses)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        val adapter = ArrayAdapter(requireContext(), R.layout.simple_spinner_item, courses)
+        adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
         spCourse!!.adapter = adapter
 
         sbDifficulty!!.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {

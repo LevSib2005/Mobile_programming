@@ -1,4 +1,4 @@
-package com.example.mobile_programming.models
+package com.example.mobile_programming.domain.models
 
 import com.example.mobile_programming.R
 import kotlin.math.cos

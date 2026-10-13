@@ -1,4 +1,4 @@
-package com.example.mobile_programming.fragments
+package com.example.mobile_programming.presentation.ui
 
 import android.os.Bundle
 import android.os.Handler
@@ -13,9 +13,9 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import com.example.mobile_programming.MainActivity
 import com.example.mobile_programming.R
-import com.example.mobile_programming.models.Bug
-import com.example.mobile_programming.views.GameView
-import com.example.mobile_programming.models.GameSettings
+import com.example.mobile_programming.domain.models.Bug
+import com.example.mobile_programming.presentation.ui.views.GameView
+import com.example.mobile_programming.domain.models.GameSettings
 
 class GameFragment : Fragment() {
 

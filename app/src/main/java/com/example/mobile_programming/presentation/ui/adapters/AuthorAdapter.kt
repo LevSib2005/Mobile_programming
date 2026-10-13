@@ -1,4 +1,4 @@
-package com.example.mobile_programming.adapters
+package com.example.mobile_programming.presentation.ui.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -8,7 +8,7 @@ import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.mobile_programming.R
-import com.example.mobile_programming.models.Author
+import com.example.mobile_programming.domain.models.Author
 
 class AuthorAdapter(
     private val context: Context,

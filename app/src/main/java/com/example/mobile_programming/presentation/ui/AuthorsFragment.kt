@@ -1,4 +1,4 @@
-package com.example.mobile_programming.fragments
+package com.example.mobile_programming.presentation.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import android.widget.ListView
 import androidx.fragment.app.Fragment
 import com.example.mobile_programming.R
-import com.example.mobile_programming.adapters.AuthorAdapter
-import com.example.mobile_programming.models.Author
+import com.example.mobile_programming.presentation.ui.adapters.AuthorAdapter
+import com.example.mobile_programming.domain.models.Author
 
 class AuthorsFragment : Fragment() {
 

@@ -1,4 +1,4 @@
-package com.example.mobile_programming.fragments
+package com.example.mobile_programming.presentation.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater

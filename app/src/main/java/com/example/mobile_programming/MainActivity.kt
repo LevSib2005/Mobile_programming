@@ -6,11 +6,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
-import com.example.mobile_programming.fragments.AuthorsFragment
-import com.example.mobile_programming.fragments.GameFragment
-import com.example.mobile_programming.fragments.RegistrationFragment
-import com.example.mobile_programming.fragments.RulesFragment
-import com.example.mobile_programming.fragments.SettingsFragment
+import com.example.mobile_programming.presentation.ui.AuthorsFragment
+import com.example.mobile_programming.presentation.ui.GameFragment
+import com.example.mobile_programming.presentation.ui.RegistrationFragment
+import com.example.mobile_programming.presentation.ui.RulesFragment
+import com.example.mobile_programming.presentation.ui.SettingsFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
