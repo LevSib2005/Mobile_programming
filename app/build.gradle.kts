@@ -1,16 +1,17 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.ksp)
 }
 
 android {
-    namespace = "com.example.mobile_programming"
+    namespace = "com.example.myapplication"
     compileSdk {
         version = release(37)
     }
 
     defaultConfig {
-        applicationId = "com.example.mobile_programming"
-        minSdk = 28
+        applicationId = "com.example.myapplication"
+        minSdk = 24
         targetSdk = 37
         versionCode = 1
         versionName = "1.0"
@@ -36,8 +37,15 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.fragment.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.viewpager2)
+    implementation(libs.kotlinx.coroutines.android)
     implementation(libs.material)
-    implementation("androidx.viewpager2:viewpager2:1.0.0")
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
