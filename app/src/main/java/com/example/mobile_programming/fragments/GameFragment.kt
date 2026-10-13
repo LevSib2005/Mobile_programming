@@ -24,6 +24,7 @@ class GameFragment : Fragment() {
     private lateinit var tvTimer: TextView
     private lateinit var startOverlay: LinearLayout
     private lateinit var resultOverlay: LinearLayout
+    private lateinit var pauseOverlay: LinearLayout
     private lateinit var tvResultScore: TextView
     private lateinit var tvResultHits: TextView
     private lateinit var tvResultMisses: TextView
@@ -33,19 +34,21 @@ class GameFragment : Fragment() {
     private var hits = 0
     private var misses = 0
     private var timeLeft = 0
+
     private var roundActive = false
+    private var roundPaused = false
 
     private val handler = Handler(Looper.getMainLooper())
 
     private val backCallback = object : OnBackPressedCallback(false) {
         override fun handleOnBackPressed() {
-            endRound()
+            if (roundPaused) resumeRound() else pauseRound()
         }
     }
 
     private val spawnTask = object : Runnable {
         override fun run() {
-            if (!roundActive) return
+            if (!roundActive || roundPaused) return
             gameView.spawnBug()
             handler.postDelayed(this, 700)
         }
@@ -53,10 +56,11 @@ class GameFragment : Fragment() {
 
     private val timerTask = object : Runnable {
         override fun run() {
-            if (!roundActive) return
+            if (!roundActive || roundPaused) return
             timeLeft--
             tvTimer.text = "$timeLeft сек"
-            if (timeLeft <= 0) endRound() else handler.postDelayed(this, 1000)
+            if (timeLeft <= 0) endRound()
+            else handler.postDelayed(this, 1000)
         }
     }
 
@@ -74,6 +78,7 @@ class GameFragment : Fragment() {
         tvTimer = view.findViewById(R.id.tvTimer)
         startOverlay = view.findViewById(R.id.startOverlay)
         resultOverlay = view.findViewById(R.id.resultOverlay)
+        pauseOverlay = view.findViewById(R.id.pauseOverlay)
         tvResultScore = view.findViewById(R.id.tvResultScore)
         tvResultHits = view.findViewById(R.id.tvResultHits)
         tvResultMisses = view.findViewById(R.id.tvResultMisses)
@@ -81,12 +86,20 @@ class GameFragment : Fragment() {
 
         val btnStart: Button = view.findViewById(R.id.btnStart)
         val btnPlayAgain: Button = view.findViewById(R.id.btnPlayAgain)
+        val btnPause: Button = view.findViewById(R.id.btnPause)
+        val btnResume: Button = view.findViewById(R.id.btnResume)
+        val btnRestart: Button = view.findViewById(R.id.btnRestart)
+        val btnExit: Button = view.findViewById(R.id.btnExit)
 
         gameView.onBugKilled = { bug -> onBugKilled(bug) }
         gameView.onMiss = { onMiss() }
 
         btnStart.setOnClickListener { startRound() }
         btnPlayAgain.setOnClickListener { startRound() }
+        btnPause.setOnClickListener { pauseRound() }
+        btnResume.setOnClickListener { resumeRound() }
+        btnRestart.setOnClickListener { startRound() }
+        btnExit.setOnClickListener { exitToMenu() }
 
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
@@ -95,38 +108,77 @@ class GameFragment : Fragment() {
     }
 
     private fun startRound() {
+        stopAllTasks()
+        gameView.stop()
+
         score = 0
         hits = 0
         misses = 0
         timeLeft = GameSettings.roundTime
+        roundActive = true
+        roundPaused = false
 
         tvScore.text = "Очки: 0"
         tvTimer.text = "$timeLeft сек"
 
         startOverlay.visibility = View.GONE
         resultOverlay.visibility = View.GONE
+        pauseOverlay.visibility = View.GONE
 
         (activity as? MainActivity)?.setGameMode(true)
-
         backCallback.isEnabled = true
 
         gameView.clearBugs()
         gameView.start()
 
-        roundActive = true
         gameView.spawnBug()
         handler.postDelayed(spawnTask, 700)
         handler.postDelayed(timerTask, 1000)
     }
 
+    private fun pauseRound() {
+        if (!roundActive || roundPaused) return
+        roundPaused = true
+
+        stopAllTasks()
+        gameView.stop()
+
+        pauseOverlay.visibility = View.VISIBLE
+    }
+
+    private fun resumeRound() {
+        if (!roundActive || !roundPaused) return
+        roundPaused = false
+
+        pauseOverlay.visibility = View.GONE
+
+        gameView.start()
+        handler.postDelayed(spawnTask, 700)
+        handler.postDelayed(timerTask, 1000)
+    }
+
+    private fun exitToMenu() {
+        roundActive = false
+        roundPaused = false
+        stopAllTasks()
+        gameView.stop()
+        gameView.clearBugs()
+
+        pauseOverlay.visibility = View.GONE
+        resultOverlay.visibility = View.GONE
+        startOverlay.visibility = View.VISIBLE
+
+        (activity as? MainActivity)?.setGameMode(false)
+        backCallback.isEnabled = false
+    }
+
     private fun endRound() {
         roundActive = false
-        handler.removeCallbacks(spawnTask)
-        handler.removeCallbacks(timerTask)
+        roundPaused = false
+        stopAllTasks()
         gameView.stop()
 
         (activity as? MainActivity)?.setGameMode(false)
-
         backCallback.isEnabled = false
 
         val total = hits + misses
@@ -137,28 +189,39 @@ class GameFragment : Fragment() {
         tvResultMisses.text = "Промахов: $misses"
         tvResultAccuracy.text = "Точность: $accuracy%"
 
+        pauseOverlay.visibility = View.GONE
         resultOverlay.visibility = View.VISIBLE
     }
 
+    private fun stopAllTasks() {
+        handler.removeCallbacks(spawnTask)
+        handler.removeCallbacks(timerTask)
+    }
+
     private fun onBugKilled(bug: Bug) {
+        if (roundPaused) return
         score += bug.points
         hits++
         tvScore.text = "Очки: $score"
     }
 
     private fun onMiss() {
+        if (roundPaused) return
         misses++
         score = (score - 1).coerceAtLeast(0)
         tvScore.text = "Очки: $score"
     }
 
+
     override fun onPause() {
         super.onPause()
-        if (roundActive) endRound()
+        if (roundActive && !roundPaused) pauseRound()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        roundActive = false
+        roundPaused = false
         gameView.stop()
         handler.removeCallbacksAndMessages(null)
     }
