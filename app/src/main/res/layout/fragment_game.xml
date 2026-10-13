@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,13 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!-- очки и таймер -->
+    <!-- HUD: счёт, таймер и кнопка паузы -->
     <LinearLayout
         android:id="@+id/hudLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="16dp"
+        android:gravity="center_vertical"
         android:background="#80000000">
 
         <TextView
@@ -32,10 +35,23 @@
             android:id="@+id/tvTimer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
             android:text="60 сек"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
             android:textStyle="bold"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPause"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:padding="0dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="II"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:cornerRadius="22dp" />
     </LinearLayout>
 
     <!-- Стартовый экран -->
@@ -73,7 +89,7 @@
             android:paddingEnd="48dp"/>
     </LinearLayout>
 
-    <!-- Экран результата после окончания раунда -->
+    <!-- Экран результата -->
     <LinearLayout
         android:id="@+id/resultOverlay"
         android:layout_width="match_parent"
@@ -81,7 +97,8 @@
         android:orientation="vertical"
         android:gravity="center"
         android:background="#CC000000"
-        android:visibility="gone">
+        android:visibility="gone"
+        tools:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"
@@ -132,4 +149,52 @@
             android:paddingStart="48dp"
             android:paddingEnd="48dp"/>
     </LinearLayout>
+
+    <!-- Экран паузы -->
+    <LinearLayout
+        android:id="@+id/pauseOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="#CC000000"
+        android:visibility="gone"
+        tools:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Пауза"
+            android:textColor="#FFFFFF"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="32dp"/>
+
+        <Button
+            android:id="@+id/btnResume"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Продолжить"
+            android:paddingStart="48dp"
+            android:paddingEnd="48dp"
+            android:layout_marginBottom="16dp"/>
+
+        <Button
+            android:id="@+id/btnRestart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Начать заново"
+            android:paddingStart="48dp"
+            android:paddingEnd="48dp"/>
+
+        <Button
+            android:id="@+id/btnExit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Выход"
+            android:paddingStart="48dp"
+            android:paddingEnd="48dp"
+            android:layout_marginTop="16dp"/>
+    </LinearLayout>
+
 </FrameLayout>
