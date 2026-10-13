@@ -1,57 +1,36 @@
 package com.example.mobile_programming
 
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import androidx.viewpager2.adapter.FragmentStateAdapter
-import androidx.viewpager2.widget.ViewPager2
-import com.example.mobile_programming.presentation.ui.AuthorsFragment
-import com.example.mobile_programming.presentation.ui.GameFragment
-import com.example.mobile_programming.presentation.ui.RegistrationFragment
-import com.example.mobile_programming.presentation.ui.RulesFragment
-import com.example.mobile_programming.presentation.ui.SettingsFragment
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
+import androidx.fragment.app.commit
+import com.example.mobile_programming.data.local.SessionManager
+import com.example.mobile_programming.presentation.ui.AuthFragment
+import com.example.mobile_programming.presentation.ui.MainTabsFragment
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var viewPager: ViewPager2
-    private lateinit var tabLayout: TabLayout
-
-    private val tabTitles = listOf("Регистрация", "Правила", "Игра", "Авторы", "Настройки")
+    private lateinit var session: SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        viewPager = findViewById(R.id.viewPager)
-        tabLayout = findViewById(R.id.tabLayout)
+        session = SessionManager(this)
 
-        viewPager.adapter = TabsAdapter()
-
-        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            tab.text = tabTitles[position]
-        }.attach()
+        if (savedInstanceState == null) {
+            if (session.isLoggedIn()) showMainContent() else showAuth()
+        }
     }
 
-    fun setGameMode(gameMode: Boolean) {
-        tabLayout.visibility = if (gameMode) View.GONE else View.VISIBLE
-        viewPager.isUserInputEnabled = !gameMode
+    fun showMainContent() {
+        supportFragmentManager.commit {
+            replace(R.id.mainContainer, MainTabsFragment())
+        }
     }
 
-    private inner class TabsAdapter : FragmentStateAdapter(this) {
-        override fun getItemCount(): Int = tabTitles.size
-
-        override fun createFragment(position: Int): Fragment {
-            return when (position) {
-                0 -> RegistrationFragment()
-                1 -> RulesFragment()
-                2 -> GameFragment()
-                3 -> AuthorsFragment()
-                4 -> SettingsFragment()
-                else -> RegistrationFragment()
-            }
+    fun showAuth() {
+        supportFragmentManager.commit {
+            replace(R.id.mainContainer, AuthFragment())
         }
     }
 }

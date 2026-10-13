@@ -23,7 +23,7 @@ class RulesFragment : Fragment() {
 
         val webView = view.findViewById<WebView>(R.id.webViewRules)
 
-        // Читаем HTML-файл из res/raw
+        // Читаем HTML-файл
         val html = resources.openRawResource(R.raw.rules)
             .bufferedReader(Charsets.UTF_8)
             .use { it.readText() }

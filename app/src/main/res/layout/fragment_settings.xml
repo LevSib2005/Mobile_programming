@@ -60,14 +60,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Длительность раунда: 60 сек"/>
+            android:text="Длительность раунда: 30 сек"/>
         <SeekBar
             android:id="@+id/sbRoundTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:min="30"
-            android:max="180"
-            android:progress="60"/>
+            android:min="1"
+            android:max="60"
+            android:progress="30"/>
 
     </LinearLayout>
 </ScrollView>

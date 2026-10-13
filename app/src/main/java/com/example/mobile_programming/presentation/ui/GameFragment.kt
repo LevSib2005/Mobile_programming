@@ -11,7 +11,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import com.example.mobile_programming.MainActivity
 import com.example.mobile_programming.R
 import com.example.mobile_programming.domain.models.Bug
 import com.example.mobile_programming.presentation.ui.views.GameView
@@ -125,7 +124,7 @@ class GameFragment : Fragment() {
         resultOverlay.visibility = View.GONE
         pauseOverlay.visibility = View.GONE
 
-        (activity as? MainActivity)?.setGameMode(true)
+        (requireParentFragment() as? MainTabsFragment)?.setGameMode(true)
         backCallback.isEnabled = true
 
         gameView.clearBugs()
@@ -139,19 +138,15 @@ class GameFragment : Fragment() {
     private fun pauseRound() {
         if (!roundActive || roundPaused) return
         roundPaused = true
-
         stopAllTasks()
         gameView.stop()
-
         pauseOverlay.visibility = View.VISIBLE
     }
 
     private fun resumeRound() {
         if (!roundActive || !roundPaused) return
         roundPaused = false
-
         pauseOverlay.visibility = View.GONE
-
         gameView.start()
         handler.postDelayed(spawnTask, 700)
         handler.postDelayed(timerTask, 1000)
@@ -168,7 +163,7 @@ class GameFragment : Fragment() {
         resultOverlay.visibility = View.GONE
         startOverlay.visibility = View.VISIBLE
 
-        (activity as? MainActivity)?.setGameMode(false)
+        (requireParentFragment() as? MainTabsFragment)?.setGameMode(false)
         backCallback.isEnabled = false
     }
 
@@ -178,7 +173,7 @@ class GameFragment : Fragment() {
         stopAllTasks()
         gameView.stop()
 
-        (activity as? MainActivity)?.setGameMode(false)
+        (requireParentFragment() as? MainTabsFragment)?.setGameMode(false)
         backCallback.isEnabled = false
 
         val total = hits + misses
@@ -211,7 +206,6 @@ class GameFragment : Fragment() {
         score = (score - 1).coerceAtLeast(0)
         tvScore.text = "Очки: $score"
     }
-
 
     override fun onPause() {
         super.onPause()
