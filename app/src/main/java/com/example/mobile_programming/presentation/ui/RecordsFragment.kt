@@ -43,8 +43,6 @@ class RecordsFragment : Fragment() {
         tvPersonal = view.findViewById(R.id.tvPersonalRecord)
         val spFilter: Spinner = view.findViewById(R.id.spDifficultyFilter)
 
-        // --- Собираем варианты фильтра ---
-        // Позиция 0 = "Все сложности", 1..10 = конкретная скорость
         val options = mutableListOf("Все сложности")
         for (i in 1..10) options.add("Скорость $i")
 
@@ -56,7 +54,6 @@ class RecordsFragment : Fragment() {
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spFilter.adapter = spinnerAdapter
 
-        // --- Слушаем выбор ---
         spFilter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?, v: View?, position: Int, id: Long
@@ -72,11 +69,9 @@ class RecordsFragment : Fragment() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-        // --- Личный рекорд ---
         loadPersonal()
     }
 
-    // difficulty == null → общий топ; иначе топ по конкретной скорости
     private fun loadTop3(difficulty: Int?) {
         viewLifecycleOwner.lifecycleScope.launch {
             val top = if (difficulty == null) {
