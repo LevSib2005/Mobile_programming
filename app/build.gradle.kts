@@ -37,19 +37,36 @@ android {
 }
 
 dependencies {
+    // Базовые зависимости Android
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-    ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.viewpager2)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.material)
+
+    // ViewModel (пригодится в будущем)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+
+    // Room (База данных)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
+
+    // Retrofit для запросов к ЦБ
+    implementation(libs.retrofit)
+
+    // SimpleXML для парсинга XML ответа от ЦБ (с исключениями конфликтующих библиотек)
+    implementation(libs.simple.xml) {
+        exclude(module = "stax")
+        exclude(module = "stax-api")
+        exclude(module = "xpp3")
+    }
+
+    // Тесты
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
