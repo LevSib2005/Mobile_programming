@@ -1,9 +1,11 @@
 package com.example.mobile_programming.presentation.ui
 
+import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.media.AudioAttributes
 import android.media.SoundPool
 import android.os.Bundle
 import android.os.Handler
@@ -122,6 +124,17 @@ class GameFragment : Fragment() {
         val btnResume: Button = view.findViewById(R.id.btnResume)
         val btnRestart: Button = view.findViewById(R.id.btnRestart)
         val btnExit: Button = view.findViewById(R.id.btnExit)
+
+        // Инициализация SoundPool
+        val audioAttributes = AudioAttributes.Builder()
+            .setUsage(AudioAttributes.USAGE_GAME)
+            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+            .build()
+        soundPool = SoundPool.Builder()
+            .setMaxStreams(2)
+            .setAudioAttributes(audioAttributes)
+            .build()
+        screamSoundId = soundPool.load(requireContext(), R.raw.bug_scream, 1)
 
         gameView.onBugKilled = { bug -> onBugKilled(bug) }
         gameView.onMiss = { onMiss() }
