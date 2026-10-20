@@ -46,6 +46,9 @@ class GameView @JvmOverloads constructor(
     var onBugKilled: ((Bug) -> Unit)? = null
     var onMiss: (() -> Unit)? = null
 
+    var onBonusClicked: (() -> Unit)? = null
+    var onGravityEnded: (() -> Unit)? = null
+
     private val loop = object : Runnable {
         override fun run() {
             val now = System.currentTimeMillis()
