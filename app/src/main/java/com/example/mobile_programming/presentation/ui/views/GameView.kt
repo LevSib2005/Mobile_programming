@@ -220,6 +220,22 @@ class GameView @JvmOverloads constructor(
         val lx = event.x / sx
         val ly = event.y / sy
 
+        // Проверка клика по бонусу
+        if (isBonusVisible) {
+            val dx = lx - bonusX
+            val dy = ly - bonusY
+            val r = bonusSize / 2f
+            if (dx * dx + dy * dy <= r * r) {
+                isBonusVisible = false
+                timeSinceLastBonus = 0f
+                setGravityActive(true)
+                gravityTimer = 0f
+                invalidate()
+                onBonusClicked?.invoke()
+                return true
+            }
+        }
+
         for (i in bugs.indices.reversed()) {
             val bug = bugs[i]
             val dx = lx - bug.x
