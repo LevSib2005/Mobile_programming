@@ -1,5 +1,8 @@
 package com.example.mobile_programming.presentation.ui
 
+import android.hardware.Sensor
+import android.hardware.SensorManager
+import android.media.SoundPool
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -36,6 +39,15 @@ class GameFragment : Fragment() {
 
     private lateinit var scoreRepo: ScoreRepository
     private lateinit var session: SessionManager
+
+    // Переменные для звука
+    private lateinit var soundPool: SoundPool
+    private var screamSoundId = 0
+    private var screamStreamId = 0
+
+    // Переменные для акселерометра
+    private lateinit var sensorManager: SensorManager
+    private var accelerometer: Sensor? = null
 
     private var score = 0
     private var hits = 0
