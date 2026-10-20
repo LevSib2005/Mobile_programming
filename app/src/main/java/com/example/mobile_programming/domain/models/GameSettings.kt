@@ -5,4 +5,5 @@ object GameSettings {
     var maxBugs: Int = 10
     var bonusInterval: Int = 5
     var roundTime: Int = 30
+    var goldBugInterval: Int = 20
 }

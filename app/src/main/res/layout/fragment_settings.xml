@@ -70,5 +70,19 @@
             android:max="60"
             android:progress="30"/>
 
+        <TextView
+            android:id="@+id/tvGoldBugIntervalValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Интервал золотого жука: 20 сек" />
+        <SeekBar
+            android:id="@+id/sbGoldBugInterval"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:min="5"
+            android:max="60"
+            android:progress="20" />
+
     </LinearLayout>
 </ScrollView>

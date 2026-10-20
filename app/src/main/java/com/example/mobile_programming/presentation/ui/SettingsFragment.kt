@@ -50,6 +50,14 @@ class SettingsFragment : Fragment() {
             GameSettings.roundTime,
             " сек"
         ) { v -> GameSettings.roundTime = v }
+
+        setupSeekBar(
+            view.findViewById(R.id.sbGoldBugInterval),
+            view.findViewById(R.id.tvGoldBugIntervalValue),
+            "Интервал золотого жука: ",
+            GameSettings.goldBugInterval,
+            " сек"
+        ) { v -> GameSettings.goldBugInterval = v }
     }
 
     private fun setupSeekBar(
@@ -74,4 +82,6 @@ class SettingsFragment : Fragment() {
             override fun onStopTrackingTouch(sb: SeekBar?) {}
         })
     }
+
+
 }

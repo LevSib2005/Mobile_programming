@@ -14,7 +14,7 @@ class GoldRateRepositoryImpl(
 ) : GoldRateRepository {
 
     companion object {
-        private const val GOLD_CODE = "1" // Код золота в XML ЦБ
+        private const val GOLD_CODE = "1"
     }
 
     override suspend fun loadRate(): GoldRate {
