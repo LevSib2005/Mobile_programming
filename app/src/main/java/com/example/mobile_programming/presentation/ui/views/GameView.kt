@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import androidx.core.content.ContextCompat
+import com.example.mobile_programming.R
 import com.example.mobile_programming.domain.models.Bug
 import com.example.mobile_programming.domain.models.BugFactory
 import com.example.mobile_programming.domain.models.GameSettings
@@ -193,7 +194,23 @@ class GameView @JvmOverloads constructor(
             )
             drawable.draw(canvas)
         }
+
+        // Отрисовка бонуса
+        if (isBonusVisible) {
+            val px = bonusX * sx
+            val py = bonusY * sy
+            val psize = bonusSize * sx
+            val bonusDrawable = ContextCompat.getDrawable(context, R.drawable.bonus)
+            bonusDrawable?.setBounds(
+                (px - psize / 2f).toInt(),
+                (py - psize / 2f).toInt(),
+                (px + psize / 2f).toInt(),
+                (py + psize / 2f).toInt()
+            )
+            bonusDrawable?.draw(canvas)
+        }
     }
+
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (event.action != MotionEvent.ACTION_DOWN) return super.onTouchEvent(event)
