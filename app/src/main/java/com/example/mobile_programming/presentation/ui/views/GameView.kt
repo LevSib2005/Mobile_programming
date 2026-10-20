@@ -85,6 +85,36 @@ class GameView @JvmOverloads constructor(
         return bug
     }
 
+    // Передача данных с акселерометра
+    fun setGravity(x: Float, y: Float) {
+        if (isGravityActive) {
+            gravityX = x
+            gravityY = y
+        }
+    }
+
+    // Вкл/выкл гравитации
+    private fun setGravityActive(active: Boolean) {
+        if (isGravityActive == active) return
+        isGravityActive = active
+
+        if (isGravityActive) {
+            originalVelocities.clear()
+            bugs.forEach { originalVelocities[it.id] = Pair(it.vx, it.vy) }
+        } else {
+            gravityX = 0f
+            gravityY = 0f
+            bugs.forEach { bug ->
+                originalVelocities[bug.id]?.let { (vx, vy) ->
+                    bug.vx = vx
+                    bug.vy = vy
+                }
+            }
+            originalVelocities.clear()
+            onGravityEnded?.invoke()
+        }
+    }
+
     private fun update(dt: Float) {
         if (dt <= 0f) return
         for (bug in bugs) {
