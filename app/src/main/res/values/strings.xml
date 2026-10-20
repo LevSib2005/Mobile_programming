@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Mobile_programming</string>
+    <string name="widget_gold_loading">Загрузка...</string>
+    <string name="widget_gold_rate">Золото: %1$s ₽/г</string>
 </resources>
