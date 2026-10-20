@@ -26,6 +26,23 @@ class GameView @JvmOverloads constructor(
     private val bugs = mutableListOf<Bug>()
     private var lastFrameTime = 0L
 
+    // Переменные для бонуса
+    private var isBonusVisible = false
+    private var bonusX = 0f
+    private var bonusY = 0f
+    private val bonusSize = 80f
+    private var timeSinceLastBonus = 0f
+    private var bonusVisibleTimer = 0f
+    private val bonusLifeTimeSec = 2f
+
+    // Переменные для гравитации
+    private var isGravityActive = false
+    private var gravityX = 0f
+    private var gravityY = 0f
+    private var gravityTimer = 0f
+    private val gravityDurationSec = 5f
+    private val originalVelocities = mutableMapOf<Long, Pair<Float, Float>>()
+
     var onBugKilled: ((Bug) -> Unit)? = null
     var onMiss: (() -> Unit)? = null
 
