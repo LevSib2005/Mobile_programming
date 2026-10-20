@@ -128,7 +128,7 @@ class GameFragment : Fragment() {
         val btnRestart: Button = view.findViewById(R.id.btnRestart)
         val btnExit: Button = view.findViewById(R.id.btnExit)
 
-        // Инициализация SoundPool (звук крика)
+        // Инициализация SoundPool
         val audioAttributes = AudioAttributes.Builder()
             .setUsage(AudioAttributes.USAGE_GAME)
             .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
