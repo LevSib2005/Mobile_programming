@@ -46,7 +46,6 @@ class GameView @JvmOverloads constructor(
 
     var onBugKilled: ((Bug) -> Unit)? = null
     var onMiss: (() -> Unit)? = null
-
     var onBonusClicked: (() -> Unit)? = null
     var onGravityEnded: (() -> Unit)? = null
 
@@ -72,6 +71,12 @@ class GameView @JvmOverloads constructor(
 
     fun clearBugs() {
         bugs.clear()
+        isBonusVisible = false
+        isGravityActive = false
+        timeSinceLastBonus = 0f
+        bonusVisibleTimer = 0f
+        gravityTimer = 0f
+        originalVelocities.clear()
         invalidate()
     }
 
@@ -82,6 +87,11 @@ class GameView @JvmOverloads constructor(
         val x = Random.nextFloat() * (FIELD_W - 200f) + 100f
         val y = Random.nextFloat() * (FIELD_H - 200f) + 100f
         val bug = BugFactory.createRandom(id, x, y)
+
+        if (isGravityActive) {
+            originalVelocities[id] = Pair(bug.vx, bug.vy)
+        }
+
         bugs.add(bug)
         return bug
     }
@@ -210,7 +220,6 @@ class GameView @JvmOverloads constructor(
             bonusDrawable?.draw(canvas)
         }
     }
-
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (event.action != MotionEvent.ACTION_DOWN) return super.onTouchEvent(event)
