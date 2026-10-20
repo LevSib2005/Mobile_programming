@@ -15,6 +15,8 @@ object BugFactory {
     private const val SIZE_FAST = 75f
     private const val SIZE_RARE = 55f
 
+    private const val SIZE_GOLD = 90f
+
     private const val POINTS_NORMAL = 1
     private const val POINTS_FAST = 2
     private const val POINTS_RARE = 5
@@ -77,6 +79,22 @@ object BugFactory {
     private fun speedMultiplier(): Float {
         val s = GameSettings.speed.coerceIn(0, 10)
         return s / 5f
+    }
+
+    fun createGold(id: Long, x: Float, y: Float, goldRate: Double): Bug {
+        val (dx, dy) = randomDir()
+        val m = speedMultiplier()
+        val baseSpeed = 130f
+        val points = (goldRate / 100).toInt().coerceAtLeast(1)
+        return Bug(
+            id = id, x = x, y = y,
+            vx = dx * baseSpeed * m,
+            vy = dy * baseSpeed * m,
+            size = SIZE_GOLD,
+            type = BugType.GOLD,
+            points = points,
+            drawableRes = R.drawable.bug_gold
+        )
     }
 }
 
