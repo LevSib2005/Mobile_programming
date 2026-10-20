@@ -27,6 +27,9 @@ class GameView @JvmOverloads constructor(
     private val bugs = mutableListOf<Bug>()
     private var lastFrameTime = 0L
 
+    private var goldRate: Double = 0.0
+    private var timeSinceLastGoldBug = 0f
+
     // Переменные для бонуса
     private var isBonusVisible = false
     private var bonusX = 0f
@@ -60,6 +63,10 @@ class GameView @JvmOverloads constructor(
         }
     }
 
+    fun setGoldRate(rate: Double) {
+        this.goldRate = rate
+    }
+
     fun start() {
         lastFrameTime = 0L
         post(loop)
@@ -76,6 +83,7 @@ class GameView @JvmOverloads constructor(
         timeSinceLastBonus = 0f
         bonusVisibleTimer = 0f
         gravityTimer = 0f
+        timeSinceLastGoldBug = 0f
         originalVelocities.clear()
         invalidate()
     }
@@ -158,6 +166,23 @@ class GameView @JvmOverloads constructor(
         val sx = width / FIELD_W
         val sy = height / FIELD_H
         if (sx <= 0f || sy <= 0f) return
+
+        // золотой таракан
+        if (goldRate > 0.0) {
+            timeSinceLastGoldBug += dt
+            if (timeSinceLastGoldBug >= GameSettings.goldBugInterval) {
+                timeSinceLastGoldBug = 0f
+                if (bugs.size < GameSettings.maxBugs) {
+                    val x = Random.nextFloat() * (FIELD_W - 200f) + 100f
+                    val y = Random.nextFloat() * (FIELD_H - 200f) + 100f
+                    val id = System.currentTimeMillis() + Random.nextLong()
+                    val goldBug = BugFactory.createGold(id, x, y, goldRate)
+                    bugs.add(goldBug)
+                }
+            }
+        } else {
+            timeSinceLastGoldBug = 0f
+        }
 
         for (bug in bugs) {
             // Физика гравитации
