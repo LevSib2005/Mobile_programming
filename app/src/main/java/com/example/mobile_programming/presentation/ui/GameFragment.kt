@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -135,6 +136,19 @@ class GameFragment : Fragment() {
             .setAudioAttributes(audioAttributes)
             .build()
         screamSoundId = soundPool.load(requireContext(), R.raw.bug_scream, 1)
+
+        // Инициализация акселерометра
+        sensorManager = requireContext().getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+
+        gameView.onBugKilled = { bug -> onBugKilled(bug) }
+        gameView.onMiss = { onMiss() }
+
+        // Обработка клика по бонусу
+        gameView.onBonusClicked = {
+            screamStreamId = soundPool.play(screamSoundId, 1f, 1f, 1, -1, 1f) // -1 = зациклить звук
+            Toast.makeText(requireContext(), "Гравитация на 5 секунд!", Toast.LENGTH_SHORT).show()
+        }
 
         gameView.onBugKilled = { bug -> onBugKilled(bug) }
         gameView.onMiss = { onMiss() }
