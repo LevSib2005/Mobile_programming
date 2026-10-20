@@ -1,6 +1,8 @@
 package com.example.mobile_programming.presentation.ui
 
 import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.media.SoundPool
 import android.os.Bundle
@@ -40,12 +42,10 @@ class GameFragment : Fragment() {
     private lateinit var scoreRepo: ScoreRepository
     private lateinit var session: SessionManager
 
-    // Переменные для звука
     private lateinit var soundPool: SoundPool
     private var screamSoundId = 0
     private var screamStreamId = 0
 
-    // Переменные для акселерометра
     private lateinit var sensorManager: SensorManager
     private var accelerometer: Sensor? = null
 
@@ -58,6 +58,15 @@ class GameFragment : Fragment() {
     private var roundPaused = false
 
     private val handler = Handler(Looper.getMainLooper())
+
+    private val sensorListener = object : SensorEventListener {
+        override fun onSensorChanged(event: SensorEvent?) {
+            if (event?.sensor?.type == Sensor.TYPE_ACCELEROMETER) {
+                gameView.setGravity(-event.values[0], -event.values[1])
+            }
+        }
+        override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+    }
 
     private val backCallback = object : OnBackPressedCallback(false) {
         override fun handleOnBackPressed() {
