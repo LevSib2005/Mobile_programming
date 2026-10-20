@@ -117,15 +117,60 @@ class GameView @JvmOverloads constructor(
 
     private fun update(dt: Float) {
         if (dt <= 0f) return
+
+        // Логика таймеров бонуса
+        if (isGravityActive) {
+            gravityTimer += dt
+            if (gravityTimer >= gravityDurationSec) {
+                setGravityActive(false)
+                gravityTimer = 0f
+                timeSinceLastBonus = 0f
+            }
+        } else if (isBonusVisible) {
+            bonusVisibleTimer += dt
+            if (bonusVisibleTimer >= bonusLifeTimeSec) {
+                isBonusVisible = false
+                bonusVisibleTimer = 0f
+                timeSinceLastBonus = 0f
+            }
+        } else {
+            timeSinceLastBonus += dt
+            if (timeSinceLastBonus >= GameSettings.bonusInterval) {
+                bonusX = Random.nextFloat() * (FIELD_W - 300f) + 150f
+                bonusY = Random.nextFloat() * (FIELD_H - 300f) + 150f
+                isBonusVisible = true
+                bonusVisibleTimer = 0f
+                timeSinceLastBonus = 0f
+            }
+        }
+
+        val sx = width / FIELD_W
+        val sy = height / FIELD_H
+        if (sx <= 0f || sy <= 0f) return
+
         for (bug in bugs) {
+            // Физика гравитации
+            if (isGravityActive) {
+                bug.vx += gravityX * 400f * dt
+                bug.vy += gravityY * 400f * dt
+                val maxSpeed = 800f
+                bug.vx = bug.vx.coerceIn(-maxSpeed, maxSpeed)
+                bug.vy = bug.vy.coerceIn(-maxSpeed, maxSpeed)
+            }
+
             bug.x += bug.vx * dt
             bug.y += bug.vy * dt
 
-            val half = bug.size / 2f
-            if (bug.x < half) { bug.x = half; bug.vx = -bug.vx }
-            if (bug.x > FIELD_W - half) { bug.x = FIELD_W - half; bug.vx = -bug.vx }
-            if (bug.y < half) { bug.y = half; bug.vy = -bug.vy }
-            if (bug.y > FIELD_H - half) { bug.y = FIELD_H - half; bug.vy = -bug.vy }
+            val halfX = bug.size / 2f
+            val halfY = (bug.size * sx) / (2f * sy)
+
+            // Затухание скорости при гравитации
+            val damping = if (isGravityActive) 0.7f else 1.0f
+
+            if (bug.x < halfX) { bug.x = halfX; bug.vx = -bug.vx * damping }
+            if (bug.x > FIELD_W - halfX) { bug.x = FIELD_W - halfX; bug.vx = -bug.vx * damping }
+            if (bug.y < halfY) { bug.y = halfY; bug.vy = -bug.vy * damping }
+            if (bug.y > FIELD_H - halfY) { bug.y = FIELD_H - halfY; bug.vy = -bug.vy * damping }
         }
     }
 
