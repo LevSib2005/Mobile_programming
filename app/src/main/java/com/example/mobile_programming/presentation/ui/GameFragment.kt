@@ -28,6 +28,7 @@ import com.example.mobile_programming.presentation.ui.views.GameView
 import com.example.mobile_programming.domain.models.GameSettings
 import com.example.mobile_programming.domain.repository.ScoreRepository
 import kotlinx.coroutines.launch
+import kotlin.compareTo
 
 class GameFragment : Fragment() {
 
@@ -62,6 +63,7 @@ class GameFragment : Fragment() {
 
     private val handler = Handler(Looper.getMainLooper())
 
+    // Слушатель датчика наклона
     private val sensorListener = object : SensorEventListener {
         override fun onSensorChanged(event: SensorEvent?) {
             if (event?.sensor?.type == Sensor.TYPE_ACCELEROMETER) {
@@ -126,7 +128,7 @@ class GameFragment : Fragment() {
         val btnRestart: Button = view.findViewById(R.id.btnRestart)
         val btnExit: Button = view.findViewById(R.id.btnExit)
 
-        // Инициализация SoundPool
+        // Инициализация SoundPool (звук крика)
         val audioAttributes = AudioAttributes.Builder()
             .setUsage(AudioAttributes.USAGE_GAME)
             .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
@@ -150,8 +152,12 @@ class GameFragment : Fragment() {
             Toast.makeText(requireContext(), "Гравитация на 5 секунд!", Toast.LENGTH_SHORT).show()
         }
 
-        gameView.onBugKilled = { bug -> onBugKilled(bug) }
-        gameView.onMiss = { onMiss() }
+        gameView.onGravityEnded = {
+            if (screamStreamId != 0) {
+                soundPool.stop(screamStreamId)
+                screamStreamId = 0
+            }
+        }
 
         btnStart.setOnClickListener { startRound() }
         btnPlayAgain.setOnClickListener { startRound() }
@@ -164,6 +170,19 @@ class GameFragment : Fragment() {
             viewLifecycleOwner,
             backCallback
         )
+    }
+
+    override fun onResume() {
+        super.onResume()
+        accelerometer?.let {
+            sensorManager.registerListener(sensorListener, it, SensorManager.SENSOR_DELAY_GAME)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        sensorManager.unregisterListener(sensorListener)
+        if (roundActive && !roundPaused) pauseRound()
     }
 
     private fun startRound() {
@@ -200,6 +219,12 @@ class GameFragment : Fragment() {
         roundPaused = true
         stopAllTasks()
         gameView.stop()
+
+        if (screamStreamId != 0) {
+            soundPool.stop(screamStreamId)
+            screamStreamId = 0
+        }
+
         pauseOverlay.visibility = View.VISIBLE
     }
 
@@ -219,6 +244,11 @@ class GameFragment : Fragment() {
         gameView.stop()
         gameView.clearBugs()
 
+        if (screamStreamId != 0) {
+            soundPool.stop(screamStreamId)
+            screamStreamId = 0
+        }
+
         pauseOverlay.visibility = View.GONE
         resultOverlay.visibility = View.GONE
         startOverlay.visibility = View.VISIBLE
@@ -232,6 +262,11 @@ class GameFragment : Fragment() {
         roundPaused = false
         stopAllTasks()
         gameView.stop()
+
+        if (screamStreamId != 0) {
+            soundPool.stop(screamStreamId)
+            screamStreamId = 0
+        }
 
         (parentFragment as? MainTabsFragment)?.setGameMode(false)
         backCallback.isEnabled = false
@@ -274,16 +309,12 @@ class GameFragment : Fragment() {
         tvScore.text = "Очки: $score"
     }
 
-    override fun onPause() {
-        super.onPause()
-        if (roundActive && !roundPaused) pauseRound()
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         roundActive = false
         roundPaused = false
         gameView.stop()
         handler.removeCallbacksAndMessages(null)
+        soundPool.release()
     }
 }
