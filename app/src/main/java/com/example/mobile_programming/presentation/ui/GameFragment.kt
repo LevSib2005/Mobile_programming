@@ -27,6 +27,7 @@ import com.example.mobile_programming.domain.models.Bug
 import com.example.mobile_programming.presentation.ui.views.GameView
 import com.example.mobile_programming.domain.models.GameSettings
 import com.example.mobile_programming.domain.repository.ScoreRepository
+import com.example.mobile_programming.domain.repository.GoldRateRepository
 import kotlinx.coroutines.launch
 import kotlin.compareTo
 
@@ -145,6 +146,17 @@ class GameFragment : Fragment() {
 
         gameView.onBugKilled = { bug -> onBugKilled(bug) }
         gameView.onMiss = { onMiss() }
+
+        // Инициализация курса
+        val goldRepo = app.goldRateRepository
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val rate = goldRepo.loadRate()
+                gameView.setGoldRate(rate.valueRubPerGram)
+            } catch (e: Exception) {
+                Toast.makeText(requireContext(), "Не удалось загрузить курс золота", Toast.LENGTH_SHORT).show()
+            }
+        }
 
         // Обработка клика по бонусу
         gameView.onBonusClicked = {
