@@ -9,19 +9,20 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.mobile_programming.MainActivity
-import com.example.mobile_programming.MyApplication
 import com.example.mobile_programming.R
 import com.example.mobile_programming.data.local.SessionManager
 import com.example.mobile_programming.domain.repository.UserRepository
 import kotlinx.coroutines.launch
-import kotlin.text.clear
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class ProfileFragment : Fragment() {
+class ProfileFragment : Fragment(), KoinComponent {
+
+    private val userRepository: UserRepository by inject()
+    private val sessionManager: SessionManager by inject()
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View = inflater.inflate(R.layout.fragment_profile, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -35,17 +36,12 @@ class ProfileFragment : Fragment() {
         val tvZodiac = view.findViewById<TextView>(R.id.tvProfileZodiac)
         val btnLogout = view.findViewById<Button>(R.id.btnLogout)
 
-        val session = SessionManager(requireContext())
-
-        val app = requireContext().applicationContext as MyApplication
-        val repo: UserRepository = app.userRepository
-
-        val userId = session.getUserId()
+        val userId = sessionManager.getUserId()
 
         viewLifecycleOwner.lifecycleScope.launch {
-            val user = repo.getById(userId)
+            val user = userRepository.getById(userId)
             if (user == null) {
-                session.clear()
+                sessionManager.clear()
                 (activity as? MainActivity)?.showAuth()
                 return@launch
             }
@@ -58,7 +54,7 @@ class ProfileFragment : Fragment() {
         }
 
         btnLogout.setOnClickListener {
-            session.clear()
+            sessionManager.clear()
             (activity as? MainActivity)?.showAuth()
         }
     }
