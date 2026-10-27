@@ -24,8 +24,10 @@ class GameView @JvmOverloads constructor(
         private const val FRAME_MS = 16L
     }
 
-    private val bugs = mutableListOf<Bug>()
+    // Список жуков теперь приходит из ViewModel
+    private lateinit var bugs: MutableList<Bug>
     private var lastFrameTime = 0L
+    private var isRunning = false
 
     private var goldRate: Double = 0.0
     private var timeSinceLastGoldBug = 0f
@@ -54,6 +56,7 @@ class GameView @JvmOverloads constructor(
 
     private val loop = object : Runnable {
         override fun run() {
+            if (!isRunning) return
             val now = System.currentTimeMillis()
             val dt = if (lastFrameTime == 0L) 0f else (now - lastFrameTime) / 1000f
             lastFrameTime = now
@@ -63,21 +66,28 @@ class GameView @JvmOverloads constructor(
         }
     }
 
+    fun setBugs(newBugs: MutableList<Bug>) {
+        this.bugs = newBugs
+    }
+
     fun setGoldRate(rate: Double) {
         this.goldRate = rate
     }
 
     fun start() {
+        if (isRunning) return
+        isRunning = true
         lastFrameTime = 0L
         post(loop)
     }
 
     fun stop() {
+        if (!isRunning) return
+        isRunning = false
         removeCallbacks(loop)
     }
 
-    fun clearBugs() {
-        bugs.clear()
+    fun resetBonusAndGravity() {
         isBonusVisible = false
         isGravityActive = false
         timeSinceLastBonus = 0f
@@ -85,23 +95,6 @@ class GameView @JvmOverloads constructor(
         gravityTimer = 0f
         timeSinceLastGoldBug = 0f
         originalVelocities.clear()
-        invalidate()
-    }
-
-    fun spawnBug(): Bug? {
-        if (bugs.size >= GameSettings.maxBugs) return null
-
-        val id = System.currentTimeMillis() + Random.nextLong()
-        val x = Random.nextFloat() * (FIELD_W - 200f) + 100f
-        val y = Random.nextFloat() * (FIELD_H - 200f) + 100f
-        val bug = BugFactory.createRandom(id, x, y)
-
-        if (isGravityActive) {
-            originalVelocities[id] = Pair(bug.vx, bug.vy)
-        }
-
-        bugs.add(bug)
-        return bug
     }
 
     // Передача данных с акселерометра
@@ -135,7 +128,7 @@ class GameView @JvmOverloads constructor(
     }
 
     private fun update(dt: Float) {
-        if (dt <= 0f) return
+        if (dt <= 0f || !::bugs.isInitialized) return
 
         // Логика таймеров бонуса
         if (isGravityActive) {
@@ -167,7 +160,7 @@ class GameView @JvmOverloads constructor(
         val sy = height / FIELD_H
         if (sx <= 0f || sy <= 0f) return
 
-        // золотой таракан
+        // Золотой таракан
         if (goldRate > 0.0) {
             timeSinceLastGoldBug += dt
             if (timeSinceLastGoldBug >= GameSettings.goldBugInterval) {
@@ -212,6 +205,8 @@ class GameView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        if (!::bugs.isInitialized) return
+
         val sx = width / FIELD_W
         val sy = height / FIELD_H
 
@@ -247,6 +242,7 @@ class GameView @JvmOverloads constructor(
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (!::bugs.isInitialized) return super.onTouchEvent(event)
         if (event.action != MotionEvent.ACTION_DOWN) return super.onTouchEvent(event)
 
         val sx = width / FIELD_W
