@@ -9,8 +9,12 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.mobile_programming.R
 import com.example.mobile_programming.domain.models.GameSettings
+import com.example.mobile_programming.presentation.settings.SettingsViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsFragment : Fragment() {
+
+    private val viewModel: SettingsViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -25,39 +29,44 @@ class SettingsFragment : Fragment() {
             view.findViewById(R.id.sbSpeed),
             view.findViewById(R.id.tvSpeedValue),
             "Скорость игры: ",
-            GameSettings.speed
-        ) { v -> GameSettings.speed = v }
+            GameSettings.speed,
+            viewModel::updateSpeed
+        )
 
         setupSeekBar(
             view.findViewById(R.id.sbMaxBugs),
             view.findViewById(R.id.tvMaxBugsValue),
             "Максимум тараканов на экране: ",
-            GameSettings.maxBugs
-        ) { v -> GameSettings.maxBugs = v }
+            GameSettings.maxBugs,
+            viewModel::updateMaxBugs
+        )
 
         setupSeekBar(
             view.findViewById(R.id.sbBonusInterval),
             view.findViewById(R.id.tvBonusIntervalValue),
             "Интервал появления бонусов: ",
             GameSettings.bonusInterval,
+            viewModel::updateBonusInterval,
             " сек"
-        ) { v -> GameSettings.bonusInterval = v }
+        )
 
         setupSeekBar(
             view.findViewById(R.id.sbRoundTime),
             view.findViewById(R.id.tvRoundTimeValue),
             "Длительность раунда: ",
             GameSettings.roundTime,
+            viewModel::updateRoundTime,
             " сек"
-        ) { v -> GameSettings.roundTime = v }
+        )
 
         setupSeekBar(
             view.findViewById(R.id.sbGoldBugInterval),
             view.findViewById(R.id.tvGoldBugIntervalValue),
             "Интервал золотого жука: ",
             GameSettings.goldBugInterval,
+            viewModel::updateGoldBugInterval,
             " сек"
-        ) { v -> GameSettings.goldBugInterval = v }
+        )
     }
 
     private fun setupSeekBar(
@@ -65,16 +74,17 @@ class SettingsFragment : Fragment() {
         label: TextView,
         prefix: String,
         initialValue: Int,
-        suffix: String = "",
-        onChange: (Int) -> Unit
+        onChange: (Int) -> Unit,
+        suffix: String = ""
     ) {
-        seekBar.progress = (initialValue - 1).coerceAtLeast(0)
-        label.text = "$prefix${seekBar.progress + 1}$suffix"
-        onChange(seekBar.progress)
+        seekBar.progress = initialValue
+        label.text = "$prefix$initialValue$suffix"
+        onChange(initialValue)
 
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(sb: SeekBar?, progress: Int, fromUser: Boolean) {
-                val value = progress
+                val value = if (progress == 0 && seekBar.id == R.id.sbMaxBugs) 1 else progress
+
                 label.text = "$prefix$value$suffix"
                 onChange(value)
             }
@@ -82,6 +92,4 @@ class SettingsFragment : Fragment() {
             override fun onStopTrackingTouch(sb: SeekBar?) {}
         })
     }
-
-
 }
