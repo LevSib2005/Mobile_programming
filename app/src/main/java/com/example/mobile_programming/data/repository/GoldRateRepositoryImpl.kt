@@ -2,6 +2,7 @@ package com.example.mobile_programming.data.repository
 
 import com.example.mobile_programming.data.api.CbrApi
 import com.example.mobile_programming.data.dto.MetallResponse
+import com.example.mobile_programming.data.local.GoldRateCache
 import com.example.mobile_programming.domain.models.GoldRate
 import com.example.mobile_programming.domain.repository.GoldRateRepository
 import org.simpleframework.xml.core.Persister
@@ -10,7 +11,8 @@ import java.util.Calendar
 import java.util.Locale
 
 class GoldRateRepositoryImpl(
-    private val api: CbrApi
+    private val api: CbrApi,
+    private val cache: GoldRateCache
 ) : GoldRateRepository {
 
     companion object {
@@ -18,6 +20,21 @@ class GoldRateRepositoryImpl(
     }
 
     override suspend fun loadRate(): GoldRate {
+        return try {
+            val rate = fetchFromNetwork()
+            cache.saveRate(rate)
+            rate
+        } catch (e: Exception) {
+            val cachedRate = cache.getRate()
+            if (cachedRate != null) {
+                cachedRate
+            } else {
+                throw e
+            }
+        }
+    }
+
+    private suspend fun fetchFromNetwork(): GoldRate {
         val format = SimpleDateFormat("dd/MM/yyyy", Locale.US)
         val to = Calendar.getInstance()
         val from = Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, -7) }
