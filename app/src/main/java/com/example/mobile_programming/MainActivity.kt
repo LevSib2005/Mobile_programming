@@ -6,19 +6,19 @@ import androidx.fragment.app.commit
 import com.example.mobile_programming.data.local.SessionManager
 import com.example.mobile_programming.presentation.ui.AuthFragment
 import com.example.mobile_programming.presentation.ui.MainTabsFragment
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), KoinComponent {
 
-    private lateinit var session: SessionManager
+    private val sessionManager: SessionManager by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        session = SessionManager(this)
-
         if (savedInstanceState == null) {
-            if (session.isLoggedIn()) showMainContent() else showAuth()
+            if (sessionManager.isLoggedIn()) showMainContent() else showAuth()
         }
     }
 
