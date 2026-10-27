@@ -14,33 +14,31 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.example.mobile_programming.MyApplication
 import com.example.mobile_programming.R
 import com.example.mobile_programming.data.local.SessionManager
+import com.example.mobile_programming.domain.repository.UserRepository
 import com.example.mobile_programming.domain.util.Zodiac
 import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import java.util.Calendar
 
-class RegisterFormFragment : Fragment() {
+class RegisterFormFragment : Fragment(), KoinComponent {
+
+    private val userRepository: UserRepository by inject()
+    private val sessionManager: SessionManager by inject()
 
     private var birthDay = 1
     private var birthMonth = 1
     private var birthYear = 2000
-
     private lateinit var tvZodiac: TextView
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View = inflater.inflate(R.layout.fragment_register_form, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val app = requireContext().applicationContext as MyApplication
-        val repo = app.userRepository
-        val session = SessionManager(requireContext())
 
         val etLogin = view.findViewById<EditText>(R.id.etRegLogin)
         val etPassword = view.findViewById<EditText>(R.id.etRegPassword)
@@ -66,7 +64,6 @@ class RegisterFormFragment : Fragment() {
         }
 
         btnRegister.setOnClickListener {
-            // .lowercase() надо будет добавить если нужна нормализация
             val login = etLogin.text.toString().trim()
             val password = etPassword.text.toString().trim()
             val fio = etFio.text.toString().trim()
@@ -76,27 +73,26 @@ class RegisterFormFragment : Fragment() {
             val zodiac = Zodiac.fromDate(birthDay, birthMonth)
 
             if (login.isEmpty() || password.isEmpty() || fio.isEmpty()) {
-                toast("Заполните логин, пароль и ФИО")
+                Toast.makeText(requireContext(), "Заполните поля", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             viewLifecycleOwner.lifecycleScope.launch {
-                repo.register(login, password, fio, gender, course, birthDate, zodiac)
+                userRepository.register(login, password, fio, gender, course, birthDate, zodiac)
                     .onSuccess { id ->
-                        session.saveUserId(id)
-                        toast("Регистрация успешна")
+                        sessionManager.saveUserId(id)
+                        Toast.makeText(requireContext(), "Успешно", Toast.LENGTH_SHORT).show()
                         (parentFragment as? AuthFragment)?.onAuthSuccess()
                     }
                     .onFailure { e ->
-                        toast(e.message ?: "Ошибка регистрации")
+                        Toast.makeText(requireContext(), e.message ?: "Ошибка", Toast.LENGTH_SHORT).show()
                     }
             }
         }
     }
 
     private fun setDateFromMillis(millis: Long) {
-        val c = Calendar.getInstance()
-        c.timeInMillis = millis
+        val c = Calendar.getInstance().apply { timeInMillis = millis }
         birthYear = c.get(Calendar.YEAR)
         birthMonth = c.get(Calendar.MONTH) + 1
         birthDay = c.get(Calendar.DAY_OF_MONTH)
@@ -104,9 +100,5 @@ class RegisterFormFragment : Fragment() {
 
     private fun updateZodiacLabel() {
         tvZodiac.text = "Знак зодиака: ${Zodiac.fromDate(birthDay, birthMonth)}"
-    }
-
-    private fun toast(text: String) {
-        Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
     }
 }
